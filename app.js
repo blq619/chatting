@@ -1,26 +1,25 @@
-const http = require('http');
+const express = require('express')
+const app = express();
+const PORT = process.env.PORT || 5000;
 
-const PORT = 5000;
+app.set('views', `${__dirname}/public`)
+app.set('view engine','html')
+app.engine('html',require('ejs').renderFile)
+app.use(express.static('src',{extensions: ['html']}))
 
-//서버 생성
-http.createServer((req, res)=>{
-    
-    if(req.url === '/api/users'){
-        const users = [
-            {name : "aaa" , age: 27},
-            {name : "bbb" , age: 28},
-            {name : "ccc" , age: 29},
-            {name : "ddd" , age: 30},
-            {name : "eee" , age: 31},
-        ]
-        res.write(JSON.stringify(users));
-    } else if (req.url === '/api/todos') {
-        
-    } else {
-        res.write('<h1>Node JS</h1>');
-    }
-    res.end();
+
+
+app.get('/',(req,res)=>{
+    res.render('index');
 })
-.listen(PORT, ()=>{
-    console.log(`Server running on ${PORT}`);
+
+app.get('/api/users', (req,res) => {
+    const users = [{
+        name: 'aaa',
+        age: 1
+    }];
+    res.send(users)
+})
+app.listen(PORT, () => {
+console.log(`server is tunning on ${PORT}`);
 })
