@@ -1,11 +1,74 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chatting</title>
+    <link rel="shortcut icon" href="#">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+    <link rel="stylesheet" href="css/main.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js" integrity="sha512-v8ng/uGxkge3d1IJuEo6dJP8JViyvms0cly9pnbfRxT6/31c3dRWxIiwGnMSWwZjHKOuY3EVmijs7k1jz/9bLA==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
 </head>
+
 <body>
-    <h1>My Chatting App</h1>
+    <div class="wrap-all">
+
+        <div class="header">
+            <div class="user-container">
+                <div class="user-logo">
+                    <img src="images/1.jpg" width=100 alt="user">
+                </div>
+                <p>anonymous</p>
+            </div>
+
+            <div class="header-icon">
+                <i class="fas fa-video fa-1.5x"></i>
+                <i class="fas fa-headset fa-1.5x"></i>
+                <i class="fas fa-ellipsis-v fa-1.5x"></i>
+            </div>
+
+        </div>
+
+        <ul class="main">
+            <li></li>
+        </ul>
+
+        <div class="footer">
+            <a href="#" class="plus"><i class="fas fa-plus-circle"></i></a>
+            <input type="text" class="message" placeholder=" Type your Message">
+            <a href="#" class="send"><i class="fa fa-paper-plane" aria-placeholder="Type your message..."></i></a>
+        </div>
+
+    </div>
+    <script>
+        // socket io 연결
+        const socket = io();
+        const sendButton = document.querySelector(".send");
+        const message = document.querySelector(".message")
+            sendButton.addEventListener('click',()=>{
+            // console.log(message.value);
+            //서버로 보내는 역할
+            socket.emit('chatting',message.value);
+        })
+        message.addEventListener('keypress',(e)=> {
+            if(e.key === 'Enter') {
+                socket.emit('chatting',message.value);
+            }
+        })
+        // 서버에서 받는 역할
+        socket.on('chatting', (msg)=>{
+            $('.main').append(`<li>${msg}</li>`);
+            $(".message").val("");
+            // const ul = document.querySelector(".main");
+            // const li = document.createElement("li");
+            // const txt = document.createTextNode(msg);
+            // li.appendChild(txt);
+            // ul.appendChild(li);
+            // console.log(msg,'from server!!!');
+        })
+    </script>
 </body>
+
 </html>
